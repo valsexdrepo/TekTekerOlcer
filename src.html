@@ -63,7 +63,7 @@
         .glow.teker { background: #00ff88; }
         .glow.viraj { background: #ffaa00; }
         
-        /* Ekranlar - tam ekran, birbiri üstünde değil */
+        /* Ekranlar */
         .screen {
             position: fixed;
             top: 0;
@@ -75,15 +75,15 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 20px;
+            padding: 16px;
             z-index: 1;
         }
         .screen.active { display: flex; }
         
         /* Başlangıç */
         .logo {
-            font-size: 48px;
-            margin-bottom: 10px;
+            font-size: 44px;
+            margin-bottom: 8px;
             animation: float 3s ease-in-out infinite;
         }
         @keyframes float {
@@ -91,15 +91,15 @@
             50% { transform: translateY(-6px); }
         }
         .title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             letter-spacing: -0.5px;
         }
         .subtitle {
-            font-size: 11px;
+            font-size: 10px;
             color: #555;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
@@ -108,24 +108,24 @@
         .mode-card {
             background: rgba(255,255,255,0.03);
             border-radius: 14px;
-            padding: 18px;
-            margin: 6px 0;
-            width: 220px;
+            padding: 16px;
+            margin: 5px 0;
+            width: 210px;
             cursor: pointer;
             transition: all 0.2s;
             border: 1px solid rgba(255,255,255,0.05);
         }
         .mode-card:active { transform: scale(0.96); }
-        .mode-icon { font-size: 28px; margin-bottom: 6px; }
-        .mode-name { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
-        .mode-desc { font-size: 11px; color: #555; }
+        .mode-icon { font-size: 26px; margin-bottom: 5px; }
+        .mode-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+        .mode-desc { font-size: 10px; color: #555; }
         
         /* Gauge */
         .gauge-wrap {
             position: relative;
-            width: 160px;
-            height: 160px;
-            margin-bottom: 14px;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 10px;
             flex-shrink: 0;
         }
         .gauge-bg {
@@ -159,8 +159,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 116px;
-            height: 116px;
+            width: 108px;
+            height: 108px;
             border-radius: 50%;
             background: rgba(255,255,255,0.015);
             border: 1px solid rgba(255,255,255,0.03);
@@ -173,7 +173,7 @@
             text-align: center;
         }
         .angle-num {
-            font-size: 52px;
+            font-size: 48px;
             font-weight: 800;
             line-height: 1;
             letter-spacing: -2px;
@@ -184,56 +184,82 @@
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-top: 2px;
+            margin-top: 1px;
         }
         
         /* Yön */
         .direction {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
-            margin-top: 3px;
-            height: 14px;
+            margin-top: 2px;
+            height: 13px;
             letter-spacing: 1px;
         }
         .dir-left { color: #4488ff; }
         .dir-right { color: #ff4444; }
         .dir-straight { color: #444; }
         
+        /* Hız göstergesi */
+        .speed-wrap {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 8px 16px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.04);
+            flex-shrink: 0;
+        }
+        .speed-label {
+            font-size: 8px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .speed-num {
+            font-size: 20px;
+            font-weight: 800;
+            color: #00ccff;
+        }
+        .speed-unit {
+            font-size: 10px;
+            color: #555;
+            margin-left: 2px;
+        }
+        
         /* Maks */
         .max-wrap {
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
-            padding: 10px 20px;
-            margin-bottom: 12px;
-            min-width: 140px;
+            padding: 8px 18px;
+            margin-bottom: 8px;
+            min-width: 130px;
             border: 1px solid rgba(255,255,255,0.04);
             flex-shrink: 0;
         }
         .max-label {
-            font-size: 9px;
+            font-size: 8px;
             color: #444;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
         }
         .max-num {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
             color: #ffaa00;
         }
         .max-sub {
             font-size: 9px;
             color: #444;
-            margin-top: 3px;
+            margin-top: 2px;
         }
         
         /* Butonlar */
         .btn {
             display: block;
-            width: 180px;
-            margin: 0 0 6px 0;
-            padding: 10px 0;
-            font-size: 13px;
+            width: 170px;
+            margin: 0 0 5px 0;
+            padding: 9px 0;
+            font-size: 12px;
             font-weight: 600;
             border: none;
             border-radius: 10px;
@@ -267,12 +293,12 @@
         /* Mod badge */
         .mod-badge {
             position: fixed;
-            top: 10px;
+            top: 8px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(255,255,255,0.04);
-            padding: 5px 14px;
-            border-radius: 16px;
+            padding: 4px 12px;
+            border-radius: 14px;
             font-size: 9px;
             font-weight: 700;
             letter-spacing: 2px;
@@ -286,7 +312,7 @@
         /* Footer */
         .footer {
             position: fixed;
-            bottom: 8px;
+            bottom: 6px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 8px;
@@ -297,10 +323,10 @@
         
         /* Durum */
         .status {
-            margin-top: 12px;
+            margin-top: 10px;
             font-size: 11px;
             color: #444;
-            min-height: 16px;
+            min-height: 14px;
         }
     </style>
 </head>
@@ -320,9 +346,9 @@
 
 <!-- MOD SEÇİM -->
 <div class="screen" id="modeSelectScreen">
-    <div style="font-size: 32px; margin-bottom: 6px;">🏍️</div>
-    <div style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">Mod Seç</div>
-    <div style="font-size: 11px; color: #555; margin-bottom: 20px;">Ölçüm modunu seçin</div>
+    <div style="font-size: 30px; margin-bottom: 5px;">🏍️</div>
+    <div style="font-size: 16px; font-weight: 700; margin-bottom: 3px;">Mod Seç</div>
+    <div style="font-size: 10px; color: #555; margin-bottom: 18px;">Ölçüm modunu seçin</div>
     
     <div class="mode-card" onclick="selectMode('teker')">
         <div class="mode-icon">⬆️</div>
@@ -340,6 +366,15 @@
 <!-- ANA EKRAN -->
 <div class="screen" id="mainScreen">
     <div class="mod-badge teker" id="modBadge">Tek Teker</div>
+    
+    <!-- GPS Hız -->
+    <div class="speed-wrap">
+        <div class="speed-label">Hız</div>
+        <div>
+            <span class="speed-num" id="speedDisplay">0</span>
+            <span class="speed-unit">km/h</span>
+        </div>
+    </div>
     
     <div class="gauge-wrap">
         <div class="gauge-bg"></div>
@@ -374,6 +409,7 @@ let maxRight = 0;
 let calibrationOffset = 0;
 let isRunning = false;
 let permissionGranted = false;
+let lastSpeed = 0;
 
 function createSnowflakes() {
     const container = document.getElementById('snowContainer');
@@ -408,6 +444,7 @@ async function requestPermission() {
         typeof DeviceOrientationEvent.requestPermission !== 'function') {
         permissionGranted = true;
         showScreen('modeSelectScreen');
+        startGPS();
         return;
     }
     
@@ -418,6 +455,7 @@ async function requestPermission() {
             if (res === 'granted') {
                 permissionGranted = true;
                 showScreen('modeSelectScreen');
+                startGPS();
             } else {
                 setStatus('İzin reddedildi');
                 btn.disabled = false;
@@ -428,7 +466,31 @@ async function requestPermission() {
         }
     } else {
         showScreen('modeSelectScreen');
+        startGPS();
     }
+}
+
+function startGPS() {
+    if (!navigator.geolocation) return;
+    
+    navigator.geolocation.watchPosition(
+        (pos) => {
+            const speedMs = pos.coords.speed;
+            if (speedMs !== null && !isNaN(speedMs)) {
+                // m/s → km/h, sapma yok direkt değer
+                lastSpeed = Math.round(speedMs * 3.6);
+            }
+            document.getElementById('speedDisplay').textContent = lastSpeed;
+        },
+        (err) => {
+            console.log('GPS hatası:', err);
+        },
+        {
+            enableHighAccuracy: true,
+            maximumAge: 1000,
+            timeout: 5000
+        }
+    );
 }
 
 function selectMode(mode) {
@@ -480,16 +542,30 @@ function handleOrientation(e) {
     }
 }
 
+function getColorForAngle(angle, maxAngle) {
+    // 0° = yeşil, maxAngle° = kırmızı
+    const intensity = Math.min(angle / maxAngle, 1);
+    const r = Math.round(255 * intensity);
+    const g = Math.round(255 * (1 - intensity));
+    return `rgb(${r}, ${g}, 0)`;
+}
+
 function handleTeker(e) {
     let raw = e.beta || 0;
     let angle = raw - calibrationOffset;
+    
     if (angle < 0) angle = 0;
     if (angle > 90) angle = 90;
+    
     angle = Math.round(angle);
+    
+    const fill = document.getElementById('gaugeFill');
+    const color = getColorForAngle(angle, 90);
+    fill.style.borderTopColor = color;
     
     document.getElementById('angleDisplay').textContent = angle;
     const rot = -90 + (angle / 90 * 270);
-    document.getElementById('gaugeFill').style.transform = `rotate(${rot}deg)`;
+    fill.style.transform = `rotate(${rot}deg)`;
     
     if (angle > maxAngle) {
         maxAngle = angle;
@@ -500,6 +576,8 @@ function handleTeker(e) {
 function handleViraj(e) {
     let raw = e.gamma || 0;
     let angle = raw - calibrationOffset;
+    
+    // Sınırlandır
     if (angle < -60) angle = -60;
     if (angle > 60) angle = 60;
     
@@ -508,27 +586,26 @@ function handleViraj(e) {
     const dirEl = document.getElementById('direction');
     const fill = document.getElementById('gaugeFill');
     
-    const intensity = absAngle / 60;
-    const r = Math.round(255 * intensity);
-    const g = Math.round(255 * (1 - intensity));
-    const color = `rgb(${r}, ${g}, 0)`;
+    // Renk: açı arttıkça kırmızılaş
+    const color = getColorForAngle(absAngle, 60);
+    fill.style.borderTopColor = color;
     
     if (angle < -3) {
         dirEl.innerHTML = '← SOL';
         dirEl.className = 'direction dir-left';
-        fill.style.borderTopColor = color;
     } else if (angle > 3) {
         dirEl.innerHTML = 'SAĞ →';
         dirEl.className = 'direction dir-right';
-        fill.style.borderTopColor = color;
     } else {
         dirEl.textContent = 'Düz';
         dirEl.className = 'direction dir-straight';
-        fill.style.borderTopColor = '#ffaa00';
     }
     
-    const rot = (angle / 60) * 90;
-    document.getElementById('gaugeFill').style.transform = `rotate(${rot}deg)`;
+    // Gauge: ortada başlar (-60 = -135deg, 0 = -90deg, 60 = -45deg)
+    // Yani: -90 + (angle/60 * 45)
+    const rot = -90 + (angle / 60 * 45);
+    fill.style.transform = `rotate(${rot}deg)`;
+    
     document.getElementById('angleDisplay').textContent = absAngle;
     
     if (angle < 0 && absAngle > maxLeft) {
@@ -549,7 +626,11 @@ function updateVirajMax() {
 
 function calibrate() {
     window.addEventListener('deviceorientation', function set(e) {
-        calibrationOffset = currentMode === 'teker' ? (e.beta || 0) : (e.gamma || 0);
+        if (currentMode === 'teker') {
+            calibrationOffset = e.beta || 0;
+        } else {
+            calibrationOffset = e.gamma || 0;
+        }
         window.removeEventListener('deviceorientation', set);
     }, { once: true });
 }
