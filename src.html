@@ -4,147 +4,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>🏍️ Tek Teker Açı Ölçer</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Tek Teker</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background: #0a0a0a;
+            background: #000;
             color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             height: 100vh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            user-select: none;
         }
-        #startScreen, #mainScreen { text-align: center; width: 100%; }
+        
+        #startScreen, #mainScreen { 
+            text-align: center; 
+            width: 100%; 
+            padding: 20px;
+        }
         #mainScreen { display: none; }
         
-        .big-number {
-            font-size: 140px;
-            font-weight: 900;
-            line-height: 1;
+        /* Başlangıç ekranı */
+        .logo {
+            font-size: 60px;
+            margin-bottom: 15px;
         }
-        .label {
-            font-size: 20px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-top: 5px;
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
-        .gauge {
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            border: 10px solid #222;
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        /* Ana gösterge */
+        .gauge-wrap {
             position: relative;
-            margin: 30px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+        }
+        .gauge-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid #1a1a1a;
         }
         .gauge-fill {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 10px solid transparent;
+            border: 6px solid transparent;
             border-top-color: #00ff88;
             transform: rotate(-90deg);
-            transition: transform 0.1s;
+            transition: transform 0.15s ease-out;
         }
-        .btn {
-            padding: 20px 50px;
-            font-size: 22px;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            background: #00ff88;
-            color: #000;
-            cursor: pointer;
-            margin: 10px;
-            width: 280px;
+        .gauge-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
         }
-        .btn:disabled { background: #333; color: #666; }
-        .btn-red {
-            background: #ff4444;
-            color: white;
+        .angle-num {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -2px;
         }
-        .btn-blue {
-            background: #4488ff;
-            color: white;
-        }
-        
-        .max-box {
-            background: #1a1a1a;
-            padding: 20px 40px;
-            border-radius: 20px;
-            margin: 20px auto;
-            display: inline-block;
-        }
-        .max-value {
-            font-size: 48px;
-            font-weight: bold;
-            color: #ffaa00;
-        }
-        .max-label {
+        .angle-unit {
             font-size: 14px;
             color: #888;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-weight: 500;
+            margin-top: 2px;
         }
         
+        /* Maks açı */
+        .max-wrap {
+            background: #111;
+            border-radius: 16px;
+            padding: 14px 28px;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+        .max-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        .max-num {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffaa00;
+        }
+        
+        /* Butonlar */
+        .btn {
+            display: block;
+            width: 200px;
+            margin: 0 auto 10px;
+            padding: 14px 0;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .btn:active { transform: scale(0.96); }
+        .btn-green {
+            background: #00ff88;
+            color: #000;
+        }
+        .btn-blue {
+            background: #1a1a1a;
+            color: #4488ff;
+            border: 1px solid #222;
+        }
+        .btn-red {
+            background: #1a1a1a;
+            color: #ff4444;
+            border: 1px solid #222;
+        }
+        
+        /* Footer */
         .footer {
             position: fixed;
-            bottom: 20px;
-            font-size: 12px;
+            bottom: 12px;
+            font-size: 10px;
+            color: #333;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Durum mesajı */
+        .status {
+            margin-top: 20px;
+            font-size: 13px;
             color: #555;
-            letter-spacing: 1px;
+            min-height: 20px;
         }
     </style>
 </head>
 <body>
 
-<!-- BAŞLANGIÇ EKRANI -->
+<!-- BAŞLANGIÇ -->
 <div id="startScreen">
-    <h1 style="font-size: 50px; margin-bottom: 10px;">🏍️</h1>
-    <h2 style="margin-bottom: 40px; font-size: 28px;">Tek Teker Ölçer</h2>
-    <button class="btn" id="startBtn" onclick="requestPermission()">BAŞLAT</button>
-    <p id="status" style="margin-top: 30px; color: #666; font-size: 14px;"></p>
+    <div class="logo">🏍️</div>
+    <div class="title">Tek Teker</div>
+    <div class="subtitle">Açı ölçer</div>
+    <button class="btn btn-green" id="startBtn" onclick="requestPermission()">Başlat</button>
+    <div class="status" id="status"></div>
 </div>
 
 <!-- ANA EKRAN -->
 <div id="mainScreen">
-    <div class="gauge">
+    <div class="gauge-wrap">
+        <div class="gauge-bg"></div>
         <div class="gauge-fill" id="gaugeFill"></div>
-        <div>
-            <div class="big-number" id="angleDisplay">0</div>
-            <div class="label">DERECE</div>
+        <div class="gauge-center">
+            <div class="angle-num" id="angleDisplay">0</div>
+            <div class="angle-unit">DERECE</div>
         </div>
     </div>
     
-    <div class="max-box">
-        <div class="max-value" id="maxAngle">0°</div>
-        <div class="max-label">MAKS AÇI</div>
+    <div class="max-wrap">
+        <div class="max-label">Maks Açı</div>
+        <div class="max-num" id="maxAngle">0°</div>
     </div>
     
-    <div style="margin-top: 30px;">
-        <button class="btn btn-blue" onclick="calibrate()">DENGELLE (KALİBRASYON)</button>
-    </div>
-    <div style="margin-top: 15px;">
-        <button class="btn btn-red" onclick="reset()">SIFIRLA</button>
-    </div>
+    <button class="btn btn-blue" onclick="calibrate()">Dengele</button>
+    <button class="btn btn-red" onclick="reset()">Sıfırla</button>
 </div>
 
-<div class="footer">benden sıze kıyak :)</div>
+<div class="footer">valsesn</div>
 
 <script>
 let maxAngle = 0;
 let calibrationOffset = 0;
 let isRunning = false;
 
-function updateStatus(msg) {
+function setStatus(msg) {
     document.getElementById('status').textContent = msg;
 }
 
@@ -154,19 +207,19 @@ async function requestPermission() {
     try {
         if (typeof DeviceOrientationEvent !== 'undefined' && 
             typeof DeviceOrientationEvent.requestPermission === 'function') {
-            updateStatus('İzin isteniyor...');
-            const response = await DeviceOrientationEvent.requestPermission();
-            if (response === 'granted') {
+            setStatus('İzin isteniyor...');
+            const res = await DeviceOrientationEvent.requestPermission();
+            if (res === 'granted') {
                 startApp();
             } else {
-                updateStatus('❌ İzin reddedildi! Ayarlardan izin vermelisiniz.');
+                setStatus('İzin reddedildi');
                 btn.disabled = false;
             }
         } else {
             startApp();
         }
     } catch (e) {
-        updateStatus('❌ Hata: ' + e.message);
+        setStatus('Hata: ' + e.message);
         btn.disabled = false;
     }
 }
@@ -178,28 +231,24 @@ function startApp() {
     isRunning = true;
 }
 
-function handleOrientation(event) {
-    // beta: öne/arkaya eğim
-    let rawAngle = event.beta || 0;
+function handleOrientation(e) {
+    let raw = e.beta || 0;
+    let angle = raw - calibrationOffset;
     
-    // Kalibrasyon offset'ini uygula
-    let angle = rawAngle - calibrationOffset;
-    
-    // Negatif değerleri pozitif yap, 0-90 aralığına sınırla
-    angle = Math.abs(angle);
+    // Aşağı eğilince 0'da kal, negatif olmaz
+    if (angle < 0) angle = 0;
     if (angle > 90) angle = 90;
     
-    // Tam sayıya yuvarla (kusuratsız)
+    // Tam sayı
     angle = Math.round(angle);
     
-    // Ekran güncelle
     document.getElementById('angleDisplay').textContent = angle;
     
-    // Gauge doldur (0-90 derece → 0-270 derece dönüş)
-    const rotation = -90 + (angle / 90 * 270);
-    document.getElementById('gaugeFill').style.transform = `rotate(${rotation}deg)`;
+    // Gauge
+    const rot = -90 + (angle / 90 * 270);
+    document.getElementById('gaugeFill').style.transform = `rotate(${rot}deg)`;
     
-    // Max açı güncelle
+    // Max
     if (angle > maxAngle) {
         maxAngle = angle;
         document.getElementById('maxAngle').textContent = maxAngle + '°';
@@ -207,22 +256,10 @@ function handleOrientation(event) {
 }
 
 function calibrate() {
-    // Şu anki telefon açısını "0" olarak ayarla
-    // Bir sonraki frame'de event.beta değerini offset olarak kullanacağız
-    // Önce son bilinen beta değerini almamız lazım
-    
-    // Geçici olarak son okunan değeri saklayacağız
-    // Bunun için önce bir kere daha okuyalım
-    window.addEventListener('deviceorientation', function setCalibration(e) {
+    // Şu anki açıyı 0 olarak ayarla
+    window.addEventListener('deviceorientation', function set(e) {
         calibrationOffset = e.beta || 0;
-        window.removeEventListener('deviceorientation', setCalibration);
-        
-        // Maks açıyı da sıfırla (isteğe bağlı)
-        // maxAngle = 0;
-        // document.getElementById('maxAngle').textContent = '0°';
-        
-        // Kullanıcıya bildir
-        alert('Kalibrasyon yapıldı! Şu anki pozisyon 0° olarak ayarlandı.');
+        window.removeEventListener('deviceorientation', set);
     }, { once: true });
 }
 
