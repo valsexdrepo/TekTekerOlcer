@@ -20,7 +20,6 @@
             position: fixed;
         }
         
-        /* Kar taneleri */
         .snow-container {
             position: fixed;
             top: 0;
@@ -39,13 +38,12 @@
             animation: fall linear infinite;
         }
         @keyframes fall {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            0% { transform: translateY(0); opacity: 0; }
             10% { opacity: 0.15; }
             90% { opacity: 0.15; }
-            100% { transform: translateY(110vh) translateX(8px); opacity: 0; }
+            100% { transform: translateY(110vh); opacity: 0; }
         }
         
-        /* Glow */
         .glow {
             position: fixed;
             width: 180px;
@@ -63,7 +61,6 @@
         .glow.teker { background: #00ff88; }
         .glow.viraj { background: #ffaa00; }
         
-        /* Ekranlar */
         .screen {
             position: fixed;
             top: 0;
@@ -80,7 +77,6 @@
         }
         .screen.active { display: flex; }
         
-        /* Başlangıç */
         .logo {
             font-size: 40px;
             margin-bottom: 6px;
@@ -104,7 +100,6 @@
             text-transform: uppercase;
         }
         
-        /* Mod kartları */
         .mode-card {
             background: rgba(255,255,255,0.03);
             border-radius: 14px;
@@ -120,62 +115,44 @@
         .mode-name { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
         .mode-desc { font-size: 11px; color: #555; }
         
-        /* === GAUGE - CONIC GRADIENT ile === */
+        /* === YARI DAIRE GAUGE === */
         .gauge-wrap {
             position: relative;
             width: 170px;
-            height: 170px;
+            height: 85px;
             margin-bottom: 10px;
             flex-shrink: 0;
+            overflow: hidden;
         }
+        /* Arkaplan yarım daire */
         .gauge-bg {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 170px;
+            height: 170px;
             border-radius: 50%;
-            background: conic-gradient(
-                from 180deg,
-                rgba(255,255,255,0.03) 0deg,
-                rgba(255,255,255,0.06) 90deg,
-                rgba(255,255,255,0.03) 180deg,
-                transparent 180deg,
-                transparent 360deg
-            );
+            bottom: 0;
+            left: 0;
+            border: 3px solid rgba(255,255,255,0.06);
         }
-        .gauge-track {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(
-                from 180deg,
-                rgba(255,255,255,0.08) 0deg,
-                rgba(255,255,255,0.15) 90deg,
-                rgba(255,255,255,0.08) 180deg,
-                transparent 180deg,
-                transparent 360deg
-            );
-            -webkit-mask: radial-gradient(transparent 62%, black 63%);
-            mask: radial-gradient(transparent 62%, black 63%);
-        }
+        /* Renkli yay - conic-gradient */
         .gauge-fill {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 170px;
+            height: 170px;
             border-radius: 50%;
-            /* conic-gradient ile renkli yay */
+            bottom: 0;
+            left: 0;
             background: conic-gradient(
                 from 180deg,
                 var(--gauge-color, #00ff88) 0deg,
                 var(--gauge-color, #00ff88) var(--gauge-deg, 0deg),
                 transparent var(--gauge-deg, 0deg),
-                transparent 360deg
+                transparent 180deg
             );
-            -webkit-mask: radial-gradient(transparent 62%, black 63%);
-            mask: radial-gradient(transparent 62%, black 63%);
+            -webkit-mask: radial-gradient(transparent 58%, black 59%);
+            mask: radial-gradient(transparent 58%, black 59%);
             transition: --gauge-deg 0.15s ease-out, --gauge-color 0.3s;
         }
-        /* CSS custom property geçişi için */
         @property --gauge-deg {
             syntax: '<angle>';
             initial-value: 0deg;
@@ -186,15 +163,29 @@
             initial-value: #00ff88;
             inherits: false;
         }
+        /* İç boşluk */
+        .gauge-inner {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.015);
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        /* Merkez metin */
         .gauge-center {
             position: absolute;
-            top: 50%;
+            bottom: 8px;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             text-align: center;
+            width: 100%;
         }
         .angle-num {
-            font-size: 52px;
+            font-size: 44px;
             font-weight: 800;
             line-height: 1;
             letter-spacing: -2px;
@@ -205,10 +196,9 @@
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-top: 2px;
+            margin-top: 1px;
         }
         
-        /* Yön */
         .direction {
             font-size: 11px;
             font-weight: 700;
@@ -220,7 +210,6 @@
         .dir-right { color: #ff4444; }
         .dir-straight { color: #555; }
         
-        /* Hız */
         .speed-wrap {
             background: rgba(255,255,255,0.03);
             border-radius: 10px;
@@ -246,7 +235,6 @@
             margin-left: 2px;
         }
         
-        /* Maks */
         .max-wrap {
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
@@ -274,7 +262,6 @@
             margin-top: 2px;
         }
         
-        /* Butonlar */
         .btn {
             display: block;
             width: 180px;
@@ -311,7 +298,6 @@
             font-size: 11px;
         }
         
-        /* Mod badge */
         .mod-badge {
             position: fixed;
             top: 8px;
@@ -330,7 +316,6 @@
         .mod-badge.teker { color: #00ff88; }
         .mod-badge.viraj { color: #ffaa00; }
         
-        /* Footer */
         .footer {
             position: fixed;
             bottom: 6px;
@@ -355,7 +340,6 @@
 <div class="snow-container" id="snowContainer"></div>
 <div class="glow teker" id="glow"></div>
 
-<!-- BAŞLANGIÇ -->
 <div class="screen active" id="startScreen">
     <div class="logo">🏍️</div>
     <div class="title">Tek Teker & Viraj</div>
@@ -364,7 +348,6 @@
     <div class="status" id="status"></div>
 </div>
 
-<!-- MOD SEÇİM -->
 <div class="screen" id="modeSelectScreen">
     <div style="font-size: 32px; margin-bottom: 6px;">🏍️</div>
     <div style="font-size: 17px; font-weight: 700; margin-bottom: 3px;">Mod Seç</div>
@@ -383,7 +366,6 @@
     </div>
 </div>
 
-<!-- ANA EKRAN -->
 <div class="screen" id="mainScreen">
     <div class="mod-badge teker" id="modBadge">Tek Teker</div>
     
@@ -397,8 +379,8 @@
     
     <div class="gauge-wrap">
         <div class="gauge-bg"></div>
-        <div class="gauge-track"></div>
         <div class="gauge-fill" id="gaugeFill"></div>
+        <div class="gauge-inner"></div>
         <div class="gauge-center">
             <div class="angle-num" id="angleDisplay">0</div>
             <div class="angle-unit" id="angleUnit">Derece</div>
@@ -427,7 +409,6 @@ let maxRight = 0;
 let calibrationOffset = 0;
 let isRunning = false;
 let permissionGranted = false;
-let gpsSpeed = 0;
 
 function createSnowflakes() {
     const container = document.getElementById('snowContainer');
@@ -493,7 +474,6 @@ function startGPS() {
         document.getElementById('speedDisplay').textContent = '--';
         return;
     }
-    
     navigator.geolocation.getCurrentPosition(
         (pos) => {
             updateSpeed(pos);
@@ -511,11 +491,10 @@ function startGPS() {
 function updateSpeed(pos) {
     let speedMs = pos.coords.speed;
     if (speedMs === null || speedMs === undefined || isNaN(speedMs)) {
-        gpsSpeed = 0;
+        document.getElementById('speedDisplay').textContent = '0';
     } else {
-        gpsSpeed = Math.round(speedMs * 3.6);
+        document.getElementById('speedDisplay').textContent = Math.round(speedMs * 3.6);
     }
-    document.getElementById('speedDisplay').textContent = gpsSpeed;
 }
 
 function selectMode(mode) {
@@ -539,7 +518,6 @@ function selectMode(mode) {
         maxSub.textContent = '';
         direction.textContent = '';
         direction.className = 'direction';
-        fill.style.setProperty('--gauge-color', '#00ff88');
     } else {
         badge.textContent = 'Viraj';
         badge.className = 'mod-badge viraj';
@@ -548,7 +526,6 @@ function selectMode(mode) {
         angleUnit.textContent = 'Derece';
         direction.textContent = 'Düz';
         direction.className = 'direction dir-straight';
-        fill.style.setProperty('--gauge-color', '#ffaa00');
     }
     
     reset();
@@ -571,16 +548,16 @@ function rgbToHex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
 
-function getColorForAngle(angle, maxAngle) {
-    const intensity = Math.min(angle / maxAngle, 1);
+function getColor(intensity) {
+    // intensity: 0-1, 0=yeşil, 1=kırmızı
     const r = Math.round(255 * intensity);
     const g = Math.round(255 * (1 - intensity));
     return rgbToHex(r, g, 0);
 }
 
-function setGauge(angleDeg, color) {
+function setGauge(deg, color) {
     const fill = document.getElementById('gaugeFill');
-    fill.style.setProperty('--gauge-deg', angleDeg + 'deg');
+    fill.style.setProperty('--gauge-deg', deg + 'deg');
     fill.style.setProperty('--gauge-color', color);
 }
 
@@ -592,10 +569,12 @@ function handleTeker(e) {
     if (angle > 90) angle = 90;
     angle = Math.round(angle);
     
-    // Renk: 0=yeşil, 90=kırmızı
-    const color = getColorForAngle(angle, 90);
+    // Renk
+    const color = getColor(angle / 90);
     
-    // Gauge: 0° = 0deg (sol baş), 90° = 180deg (sağ baş)
+    // Gauge: conic-gradient from 180deg (alt)
+    // 0° tek teker = 0deg (sol baş)
+    // 90° tek teker = 180deg (sağ baş)
     const gaugeDeg = (angle / 90) * 180;
     
     setGauge(gaugeDeg, color);
@@ -612,6 +591,7 @@ function handleViraj(e) {
     let raw = e.gamma || 0;
     let angle = raw - calibrationOffset;
     
+    // Sınırlar
     if (angle < -60) angle = -60;
     if (angle > 60) angle = 60;
     
@@ -620,9 +600,9 @@ function handleViraj(e) {
     const dirEl = document.getElementById('direction');
     
     // Renk
-    const color = getColorForAngle(absAngle, 60);
+    const color = getColor(absAngle / 60);
     
-    // Yön
+    // Yön metni
     if (angle < -3) {
         dirEl.innerHTML = '← SOL';
         dirEl.className = 'direction dir-left';
@@ -634,9 +614,19 @@ function handleViraj(e) {
         dirEl.className = 'direction dir-straight';
     }
     
-    // Gauge: düz(0°) = 90deg (tam üstte)
-    // sol(-60°) = 0deg (sol baş), sağ(+60°) = 180deg (sağ baş)
-    const gaugeDeg = 90 + (angle / 60) * 90;
+    // === VIRAJ GAUGE ===
+    // conic-gradient from 180deg (alt merkezden başlar, saat yönünde)
+    // 
+    // Düz (0°) = 90deg (tam üstte, yarım dairenin ortası)
+    // Sol (-60°) = 0deg (sol baş)  
+    // Sağ (+60°) = 180deg (sağ baş)
+    //
+    // Formül: gaugeDeg = 90 + (angle / 60 * 90)
+    // -60° → 90 + (-1 * 90) = 0° (sol baş) ✓
+    //   0° → 90 + (0 * 90) = 90° (tam üstte) ✓
+    // +60° → 90 + (1 * 90) = 180° (sağ baş) ✓
+    
+    const gaugeDeg = 90 + (angle / 60 * 90);
     
     setGauge(gaugeDeg, color);
     
@@ -674,7 +664,6 @@ function reset() {
     document.getElementById('maxAngle').textContent = '0°';
     document.getElementById('angleDisplay').textContent = '0';
     
-    const fill = document.getElementById('gaugeFill');
     if (currentMode === 'teker') {
         setGauge(0, '#00ff88');
     } else {
