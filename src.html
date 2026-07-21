@@ -18,8 +18,6 @@
             overflow: hidden;
             user-select: none;
             position: fixed;
-            top: 0;
-            left: 0;
         }
         
         /* Kar taneleri */
@@ -31,7 +29,6 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            overflow: hidden;
         }
         .snowflake {
             position: absolute;
@@ -42,70 +39,67 @@
             animation: fall linear infinite;
         }
         @keyframes fall {
-            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-            8% { opacity: 0.25; }
-            92% { opacity: 0.25; }
-            100% { transform: translateY(110vh) translateX(15px) rotate(360deg); opacity: 0; }
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            8% { opacity: 0.2; }
+            92% { opacity: 0.2; }
+            100% { transform: translateY(110vh) translateX(10px); opacity: 0; }
         }
         
         /* Glow */
         .glow {
             position: fixed;
-            width: 250px;
-            height: 250px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.12;
+            filter: blur(60px);
+            opacity: 0.1;
             pointer-events: none;
             z-index: 0;
-            top: 15%;
+            top: 10%;
             left: 50%;
             transform: translateX(-50%);
-            transition: background 0.5s ease;
+            transition: background 0.5s;
         }
         .glow.teker { background: #00ff88; }
         .glow.viraj { background: #ffaa00; }
         
-        /* Ekranlar */
+        /* Ekranlar - tam ekran, birbiri üstünde değil */
         .screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 16px;
+            padding: 20px;
             z-index: 1;
         }
-        .hidden { display: none !important; }
+        .screen.active { display: flex; }
         
         /* Başlangıç */
         .logo {
-            font-size: 52px;
-            margin-bottom: 12px;
+            font-size: 48px;
+            margin-bottom: 10px;
             animation: float 3s ease-in-out infinite;
         }
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-6px); }
         }
         .title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             margin-bottom: 4px;
             letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff 0%, #888 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
         .subtitle {
-            font-size: 12px;
+            font-size: 11px;
             color: #555;
-            margin-bottom: 36px;
+            margin-bottom: 32px;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
@@ -113,25 +107,26 @@
         /* Mod kartları */
         .mode-card {
             background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 8px auto;
-            width: 240px;
+            border-radius: 14px;
+            padding: 18px;
+            margin: 6px 0;
+            width: 220px;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s;
             border: 1px solid rgba(255,255,255,0.05);
         }
         .mode-card:active { transform: scale(0.96); }
-        .mode-icon { font-size: 32px; margin-bottom: 8px; }
-        .mode-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .mode-icon { font-size: 28px; margin-bottom: 6px; }
+        .mode-name { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
         .mode-desc { font-size: 11px; color: #555; }
         
         /* Gauge */
         .gauge-wrap {
             position: relative;
-            width: 170px;
-            height: 170px;
-            margin: 0 auto 16px;
+            width: 160px;
+            height: 160px;
+            margin-bottom: 14px;
+            flex-shrink: 0;
         }
         .gauge-bg {
             position: absolute;
@@ -157,15 +152,15 @@
             border: 3px solid transparent;
             border-top-color: #00ff88;
             transform: rotate(-90deg);
-            transition: transform 0.15s ease-out, border-top-color 0.3s, filter 0.3s;
+            transition: transform 0.15s ease-out, border-top-color 0.3s;
         }
         .gauge-inner {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 124px;
-            height: 124px;
+            width: 116px;
+            height: 116px;
             border-radius: 50%;
             background: rgba(255,255,255,0.015);
             border: 1px solid rgba(255,255,255,0.03);
@@ -178,13 +173,13 @@
             text-align: center;
         }
         .angle-num {
-            font-size: 56px;
+            font-size: 52px;
             font-weight: 800;
             line-height: 1;
             letter-spacing: -2px;
         }
         .angle-unit {
-            font-size: 10px;
+            font-size: 9px;
             color: #555;
             font-weight: 600;
             letter-spacing: 2px;
@@ -192,12 +187,12 @@
             margin-top: 2px;
         }
         
-        /* Yön oku */
+        /* Yön */
         .direction {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            margin-top: 4px;
-            height: 16px;
+            margin-top: 3px;
+            height: 14px;
             letter-spacing: 1px;
         }
         .dir-left { color: #4488ff; }
@@ -207,12 +202,12 @@
         /* Maks */
         .max-wrap {
             background: rgba(255,255,255,0.03);
-            border-radius: 14px;
-            padding: 12px 24px;
-            display: inline-block;
-            margin-bottom: 16px;
-            min-width: 160px;
+            border-radius: 12px;
+            padding: 10px 20px;
+            margin-bottom: 12px;
+            min-width: 140px;
             border: 1px solid rgba(255,255,255,0.04);
+            flex-shrink: 0;
         }
         .max-label {
             font-size: 9px;
@@ -222,30 +217,30 @@
             margin-bottom: 2px;
         }
         .max-num {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 800;
             color: #ffaa00;
-            transition: all 0.3s;
         }
         .max-sub {
-            font-size: 10px;
+            font-size: 9px;
             color: #444;
-            margin-top: 4px;
+            margin-top: 3px;
         }
         
         /* Butonlar */
         .btn {
             display: block;
-            width: 200px;
-            margin: 0 auto 8px;
-            padding: 12px 0;
-            font-size: 14px;
+            width: 180px;
+            margin: 0 0 6px 0;
+            padding: 10px 0;
+            font-size: 13px;
             font-weight: 600;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
             letter-spacing: 0.3px;
+            flex-shrink: 0;
         }
         .btn:active { transform: scale(0.97); }
         .btn-green {
@@ -266,19 +261,19 @@
             background: rgba(255,255,255,0.03);
             color: #555;
             border: 1px solid rgba(255,255,255,0.05);
-            font-size: 12px;
+            font-size: 11px;
         }
         
         /* Mod badge */
         .mod-badge {
             position: fixed;
-            top: 12px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(255,255,255,0.04);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 10px;
+            padding: 5px 14px;
+            border-radius: 16px;
+            font-size: 9px;
             font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -291,10 +286,10 @@
         /* Footer */
         .footer {
             position: fixed;
-            bottom: 10px;
+            bottom: 8px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 9px;
+            font-size: 8px;
             color: #222;
             letter-spacing: 1px;
             z-index: 1;
@@ -302,10 +297,10 @@
         
         /* Durum */
         .status {
-            margin-top: 16px;
-            font-size: 12px;
+            margin-top: 12px;
+            font-size: 11px;
             color: #444;
-            min-height: 18px;
+            min-height: 16px;
         }
     </style>
 </head>
@@ -315,7 +310,7 @@
 <div class="glow teker" id="glow"></div>
 
 <!-- BAŞLANGIÇ -->
-<div class="screen" id="startScreen">
+<div class="screen active" id="startScreen">
     <div class="logo">🏍️</div>
     <div class="title">Tek Teker & Viraj</div>
     <div class="subtitle">Açı Ölçer</div>
@@ -324,10 +319,10 @@
 </div>
 
 <!-- MOD SEÇİM -->
-<div class="screen hidden" id="modeSelectScreen">
-    <div class="logo" style="font-size: 36px; margin-bottom: 6px; animation: none;">🏍️</div>
-    <div class="title" style="font-size: 18px; margin-bottom: 6px;">Mod Seç</div>
-    <div class="subtitle" style="margin-bottom: 24px;">Ölçüm modunu seçin</div>
+<div class="screen" id="modeSelectScreen">
+    <div style="font-size: 32px; margin-bottom: 6px;">🏍️</div>
+    <div style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">Mod Seç</div>
+    <div style="font-size: 11px; color: #555; margin-bottom: 20px;">Ölçüm modunu seçin</div>
     
     <div class="mode-card" onclick="selectMode('teker')">
         <div class="mode-icon">⬆️</div>
@@ -343,7 +338,7 @@
 </div>
 
 <!-- ANA EKRAN -->
-<div class="screen hidden" id="mainScreen">
+<div class="screen" id="mainScreen">
     <div class="mod-badge teker" id="modBadge">Tek Teker</div>
     
     <div class="gauge-wrap">
@@ -380,18 +375,17 @@ let calibrationOffset = 0;
 let isRunning = false;
 let permissionGranted = false;
 
-// Kar taneleri
 function createSnowflakes() {
     const container = document.getElementById('snowContainer');
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 18; i++) {
         const flake = document.createElement('div');
         flake.className = 'snowflake';
-        const size = Math.random() * 2 + 1;
+        const size = Math.random() * 1.5 + 1;
         flake.style.width = size + 'px';
         flake.style.height = size + 'px';
         flake.style.left = Math.random() * 100 + '%';
-        flake.style.animationDuration = (Math.random() * 6 + 5) + 's';
-        flake.style.animationDelay = Math.random() * 8 + 's';
+        flake.style.animationDuration = (Math.random() * 5 + 4) + 's';
+        flake.style.animationDelay = Math.random() * 6 + 's';
         container.appendChild(flake);
     }
 }
@@ -401,26 +395,29 @@ function setStatus(msg) {
     document.getElementById('status').textContent = msg;
 }
 
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
 async function requestPermission() {
     const btn = document.getElementById('startBtn');
     btn.disabled = true;
     
-    // Android veya eski iOS - direkt geç
     if (typeof DeviceOrientationEvent === 'undefined' || 
         typeof DeviceOrientationEvent.requestPermission !== 'function') {
         permissionGranted = true;
-        goToModeSelect();
+        showScreen('modeSelectScreen');
         return;
     }
     
-    // iOS 13+ - izin iste (sadece bir kere)
     if (!permissionGranted) {
         try {
             setStatus('İzin isteniyor...');
             const res = await DeviceOrientationEvent.requestPermission();
             if (res === 'granted') {
                 permissionGranted = true;
-                goToModeSelect();
+                showScreen('modeSelectScreen');
             } else {
                 setStatus('İzin reddedildi');
                 btn.disabled = false;
@@ -430,19 +427,13 @@ async function requestPermission() {
             btn.disabled = false;
         }
     } else {
-        goToModeSelect();
+        showScreen('modeSelectScreen');
     }
-}
-
-function goToModeSelect() {
-    document.getElementById('startScreen').classList.add('hidden');
-    document.getElementById('modeSelectScreen').classList.remove('hidden');
 }
 
 function selectMode(mode) {
     currentMode = mode;
-    document.getElementById('modeSelectScreen').classList.add('hidden');
-    document.getElementById('mainScreen').classList.remove('hidden');
+    showScreen('mainScreen');
     
     const badge = document.getElementById('modBadge');
     const glow = document.getElementById('glow');
@@ -492,13 +483,11 @@ function handleOrientation(e) {
 function handleTeker(e) {
     let raw = e.beta || 0;
     let angle = raw - calibrationOffset;
-    
     if (angle < 0) angle = 0;
     if (angle > 90) angle = 90;
-    
     angle = Math.round(angle);
-    document.getElementById('angleDisplay').textContent = angle;
     
+    document.getElementById('angleDisplay').textContent = angle;
     const rot = -90 + (angle / 90 * 270);
     document.getElementById('gaugeFill').style.transform = `rotate(${rot}deg)`;
     
@@ -511,7 +500,6 @@ function handleTeker(e) {
 function handleViraj(e) {
     let raw = e.gamma || 0;
     let angle = raw - calibrationOffset;
-    
     if (angle < -60) angle = -60;
     if (angle > 60) angle = 60;
     
@@ -520,19 +508,16 @@ function handleViraj(e) {
     const dirEl = document.getElementById('direction');
     const fill = document.getElementById('gaugeFill');
     
-    // Renk: açı arttıkça kırmızılaş
-    const intensity = absAngle / 60; // 0-1
+    const intensity = absAngle / 60;
     const r = Math.round(255 * intensity);
     const g = Math.round(255 * (1 - intensity));
     const color = `rgb(${r}, ${g}, 0)`;
     
     if (angle < -3) {
-        // SOL - ok sola döner
         dirEl.innerHTML = '← SOL';
         dirEl.className = 'direction dir-left';
         fill.style.borderTopColor = color;
     } else if (angle > 3) {
-        // SAĞ - ok sağa döner  
         dirEl.innerHTML = 'SAĞ →';
         dirEl.className = 'direction dir-right';
         fill.style.borderTopColor = color;
@@ -542,10 +527,8 @@ function handleViraj(e) {
         fill.style.borderTopColor = '#ffaa00';
     }
     
-    // Gauge: sol = -90deg, düz = 0deg, sağ = +90deg
     const rot = (angle / 60) * 90;
     document.getElementById('gaugeFill').style.transform = `rotate(${rot}deg)`;
-    
     document.getElementById('angleDisplay').textContent = absAngle;
     
     if (angle < 0 && absAngle > maxLeft) {
@@ -559,19 +542,14 @@ function handleViraj(e) {
 }
 
 function updateVirajMax() {
-    const maxSub = document.getElementById('maxSub');
-    maxSub.innerHTML = `Sol ${maxLeft}° | Sağ ${maxRight}°`;
+    document.getElementById('maxSub').textContent = `Sol ${maxLeft}° | Sağ ${maxRight}°`;
     const overallMax = Math.max(maxLeft, maxRight);
     document.getElementById('maxAngle').textContent = overallMax + '°';
 }
 
 function calibrate() {
     window.addEventListener('deviceorientation', function set(e) {
-        if (currentMode === 'teker') {
-            calibrationOffset = e.beta || 0;
-        } else {
-            calibrationOffset = e.gamma || 0;
-        }
+        calibrationOffset = currentMode === 'teker' ? (e.beta || 0) : (e.gamma || 0);
         window.removeEventListener('deviceorientation', set);
     }, { once: true });
 }
@@ -597,8 +575,7 @@ function reset() {
 }
 
 function goToModeSelect() {
-    document.getElementById('mainScreen').classList.add('hidden');
-    document.getElementById('modeSelectScreen').classList.remove('hidden');
+    showScreen('modeSelectScreen');
 }
 </script>
 
