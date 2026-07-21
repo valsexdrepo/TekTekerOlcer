@@ -115,11 +115,11 @@
         .mode-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
         .mode-desc { font-size: 10px; color: #555; }
         
-        /* GAUGE - YENİ TASARIM */
+        /* GAUGE - YARI DAIRE */
         .gauge-wrap {
             position: relative;
             width: 180px;
-            height: 90px; /* Yarım daire */
+            height: 90px;
             margin-bottom: 10px;
             flex-shrink: 0;
             overflow: hidden;
@@ -129,21 +129,9 @@
             width: 180px;
             height: 180px;
             border-radius: 50%;
-            border: 3px solid rgba(255,255,255,0.06);
+            border: 4px solid rgba(255,255,255,0.06);
             bottom: 0;
             left: 0;
-        }
-        .gauge-track {
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 4px solid transparent;
-            border-top-color: rgba(255,255,255,0.08);
-            bottom: 0;
-            left: 0;
-            /* Yarım daire: sol -90, orta 0, sağ +90 */
-            transform: rotate(-180deg);
         }
         .gauge-fill {
             position: absolute;
@@ -151,17 +139,17 @@
             height: 180px;
             border-radius: 50%;
             border: 4px solid transparent;
-            border-top-color: #00ff88;
+            /* border-top YERINE border-bottom kullan */
+            border-bottom-color: #00ff88;
             bottom: 0;
             left: 0;
-            /* Başlangıç: düz (0°) = -90° rotasyon */
             transform: rotate(-90deg);
-            transition: transform 0.15s ease-out, border-top-color 0.3s;
-            transform-origin: center bottom;
+            transition: transform 0.15s ease-out, border-bottom-color 0.3s;
+            transform-origin: center center;
         }
         .gauge-center {
             position: absolute;
-            bottom: 0;
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
@@ -317,7 +305,6 @@
             min-height: 14px;
         }
         
-        /* Debug */
         .debug {
             position: fixed;
             top: 40px;
@@ -335,10 +322,8 @@
 <div class="snow-container" id="snowContainer"></div>
 <div class="glow teker" id="glow"></div>
 
-<!-- DEBUG -->
 <div class="debug" id="debug"></div>
 
-<!-- BAŞLANGIÇ -->
 <div class="screen active" id="startScreen">
     <div class="logo">🏍️</div>
     <div class="title">Tek Teker & Viraj</div>
@@ -347,7 +332,6 @@
     <div class="status" id="status"></div>
 </div>
 
-<!-- MOD SEÇİM -->
 <div class="screen" id="modeSelectScreen">
     <div style="font-size: 30px; margin-bottom: 5px;">🏍️</div>
     <div style="font-size: 16px; font-weight: 700; margin-bottom: 3px;">Mod Seç</div>
@@ -366,7 +350,6 @@
     </div>
 </div>
 
-<!-- ANA EKRAN -->
 <div class="screen" id="mainScreen">
     <div class="mod-badge teker" id="modBadge">Tek Teker</div>
     
@@ -378,10 +361,8 @@
         </div>
     </div>
     
-    <!-- Yarım daire gauge -->
     <div class="gauge-wrap">
         <div class="gauge-bg"></div>
-        <div class="gauge-track"></div>
         <div class="gauge-fill" id="gaugeFill"></div>
         <div class="gauge-center">
             <div class="angle-num" id="angleDisplay">0</div>
@@ -473,22 +454,18 @@ async function requestPermission() {
     }
 }
 
-// GPS HIZI - Doğrudan değer, sapma yok
 function startGPS() {
     if (!navigator.geolocation) {
         document.getElementById('speedDisplay').textContent = '--';
         return;
     }
     
-    // Önce izin iste ve konum al
     navigator.geolocation.getCurrentPosition(
         (pos) => {
             updateSpeed(pos);
-            // Sonra sürekli izle
             gpsWatchId = navigator.geolocation.watchPosition(
                 updateSpeed,
                 (err) => {
-                    console.log('GPS:', err.code, err.message);
                     document.getElementById('speedDisplay').textContent = '0';
                 },
                 {
@@ -499,7 +476,6 @@ function startGPS() {
             );
         },
         (err) => {
-            console.log('GPS ilk:', err.code);
             document.getElementById('speedDisplay').textContent = '--';
         },
         { enableHighAccuracy: true, timeout: 5000 }
@@ -507,18 +483,12 @@ function startGPS() {
 }
 
 function updateSpeed(pos) {
-    // speed: m/s cinsinden, null olabilir
     let speedMs = pos.coords.speed;
-    
-    // Eğer speed null ise, distance/time hesapla (basit)
     if (speedMs === null || speedMs === undefined || isNaN(speedMs)) {
-        // Telefon hız sensörü yoksa 0 göster (tahmin yapma)
         gpsSpeed = 0;
     } else {
-        // m/s → km/h
         gpsSpeed = Math.round(speedMs * 3.6);
     }
-    
     document.getElementById('speedDisplay').textContent = gpsSpeed;
 }
 
@@ -543,7 +513,7 @@ function selectMode(mode) {
         maxSub.textContent = '';
         direction.textContent = '';
         direction.className = 'direction';
-        fill.style.borderTopColor = '#00ff88';
+        fill.style.borderBottomColor = '#00ff88';
     } else {
         badge.textContent = 'Viraj';
         badge.className = 'mod-badge viraj';
@@ -552,7 +522,7 @@ function selectMode(mode) {
         angleUnit.textContent = 'Derece';
         direction.textContent = 'Düz';
         direction.className = 'direction dir-straight';
-        fill.style.borderTopColor = '#ffaa00';
+        fill.style.borderBottomColor = '#ffaa00';
     }
     
     reset();
@@ -564,9 +534,8 @@ function selectMode(mode) {
 }
 
 function handleOrientation(e) {
-    // Debug
     const debug = document.getElementById('debug');
-    debug.textContent = `α:${Math.round(e.alpha||0)} β:${Math.round(e.beta||0)} γ:${Math.round(e.gamma||0)}`;
+    debug.textContent = `β:${Math.round(e.beta||0)} γ:${Math.round(e.gamma||0)}`;
     
     if (currentMode === 'teker') {
         handleTeker(e);
@@ -575,11 +544,12 @@ function handleOrientation(e) {
     }
 }
 
-function getColorForAngle(angle, maxAngle) {
+function setGaugeColor(fill, angle, maxAngle) {
     const intensity = Math.min(angle / maxAngle, 1);
     const r = Math.round(255 * intensity);
     const g = Math.round(255 * (1 - intensity));
-    return `rgb(${r}, ${g}, 0)`;
+    const color = `rgb(${r}, ${g}, 0)`;
+    fill.style.borderBottomColor = color;
 }
 
 function handleTeker(e) {
@@ -591,12 +561,12 @@ function handleTeker(e) {
     angle = Math.round(angle);
     
     const fill = document.getElementById('gaugeFill');
-    const color = getColorForAngle(angle, 90);
-    fill.style.borderTopColor = color;
+    setGaugeColor(fill, angle, 90);
     
     document.getElementById('angleDisplay').textContent = angle;
     
-    // Tek teker: yarım daire, 0 = sol (-180°), 90 = sağ (0°)
+    // Tek teker: yarım daire
+    // 0° = -180° (sol baş), 90° = 0° (sağ baş)
     const rot = -180 + (angle / 90 * 180);
     fill.style.transform = `rotate(${rot}deg)`;
     
@@ -619,8 +589,7 @@ function handleViraj(e) {
     const fill = document.getElementById('gaugeFill');
     
     // Renk
-    const color = getColorForAngle(absAngle, 60);
-    fill.style.borderTopColor = color;
+    setGaugeColor(fill, absAngle, 60);
     
     if (angle < -3) {
         dirEl.innerHTML = '← SOL';
@@ -681,10 +650,10 @@ function reset() {
     const fill = document.getElementById('gaugeFill');
     if (currentMode === 'teker') {
         fill.style.transform = 'rotate(-180deg)';
-        fill.style.borderTopColor = '#00ff88';
+        fill.style.borderBottomColor = '#00ff88';
     } else {
         fill.style.transform = 'rotate(-90deg)';
-        fill.style.borderTopColor = '#ffaa00';
+        fill.style.borderBottomColor = '#ffaa00';
         document.getElementById('maxSub').textContent = '';
         document.getElementById('direction').textContent = 'Düz';
         document.getElementById('direction').className = 'direction dir-straight';
