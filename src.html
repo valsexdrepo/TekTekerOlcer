@@ -21,72 +21,194 @@
             justify-content: center;
             overflow: hidden;
             user-select: none;
+            position: relative;
         }
         
+        /* Kar taneleri */
+        .snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(100vh) translateX(20px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Glow efekti */
+        .glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            transition: all 0.5s ease;
+        }
+        .glow.teker { background: #00ff88; top: 20%; left: 50%; transform: translateX(-50%); }
+        .glow.viraj { background: #ffaa00; top: 20%; left: 50%; transform: translateX(-50%); }
+        
+        /* Ekranlar */
         #startScreen, #mainScreen, #modeSelectScreen { 
             text-align: center; 
             width: 100%; 
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
         #mainScreen, #modeSelectScreen { display: none; }
         
-        /* Başlangıç ekranı */
+        /* Başlangıç */
         .logo {
-            font-size: 60px;
-            margin-bottom: 15px;
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         .title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .subtitle {
             font-size: 14px;
-            color: #666;
-            margin-bottom: 40px;
+            color: #555;
+            margin-bottom: 50px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
         
-        /* Mod seçim */
+        /* Mod seçim kartları */
         .mode-card {
-            background: #111;
-            border-radius: 16px;
-            padding: 24px;
-            margin: 10px auto;
-            width: 260px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 28px;
+            margin: 12px auto;
+            width: 280px;
             cursor: pointer;
-            transition: transform 0.15s, background 0.2s;
-            border: 1px solid #1a1a1a;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: left 0.5s;
+        }
+        .mode-card:hover::before {
+            left: 100%;
         }
         .mode-card:active { transform: scale(0.96); }
-        .mode-card:hover { background: #161616; }
-        .mode-icon { font-size: 36px; margin-bottom: 8px; }
-        .mode-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-        .mode-desc { font-size: 12px; color: #666; }
+        .mode-card:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+        .mode-icon { 
+            font-size: 40px; 
+            margin-bottom: 12px;
+            transition: transform 0.3s;
+        }
+        .mode-card:hover .mode-icon {
+            transform: scale(1.1);
+        }
+        .mode-name { 
+            font-size: 18px; 
+            font-weight: 700; 
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+        .mode-desc { 
+            font-size: 12px; 
+            color: #555;
+            letter-spacing: 0.5px;
+        }
         
         /* Ana gösterge */
         .gauge-wrap {
             position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 20px;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 24px;
         }
         .gauge-bg {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 6px solid #1a1a1a;
+            border: 2px solid rgba(255,255,255,0.05);
+        }
+        .gauge-track {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: rgba(255,255,255,0.08);
+            transform: rotate(-90deg);
         }
         .gauge-fill {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 6px solid transparent;
+            border: 4px solid transparent;
             border-top-color: #00ff88;
             transform: rotate(-90deg);
-            transition: transform 0.15s ease-out;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-top-color 0.3s;
+            filter: drop-shadow(0 0 8px rgba(0,255,136,0.3));
+        }
+        .gauge-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
         }
         .gauge-center {
             position: absolute;
@@ -96,142 +218,217 @@
             text-align: center;
         }
         .angle-num {
-            font-size: 72px;
+            font-size: 80px;
             font-weight: 800;
             line-height: 1;
-            letter-spacing: -2px;
+            letter-spacing: -3px;
+            transition: all 0.2s;
         }
         .angle-unit {
-            font-size: 14px;
-            color: #888;
-            font-weight: 500;
-            margin-top: 2px;
+            font-size: 12px;
+            color: #555;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 4px;
         }
         
-        /* Yön göstergesi (viraj modu) */
+        /* Yön */
         .direction {
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 6px;
             height: 20px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
         }
-        .dir-left { color: #4488ff; }
-        .dir-right { color: #ff4444; }
-        .dir-straight { color: #666; }
+        .dir-left { color: #4488ff; text-shadow: 0 0 10px rgba(68,136,255,0.3); }
+        .dir-right { color: #ff4444; text-shadow: 0 0 10px rgba(255,68,68,0.3); }
+        .dir-straight { color: #444; }
         
         /* Maks açı */
         .max-wrap {
-            background: #111;
-            border-radius: 16px;
-            padding: 14px 28px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 18px 32px;
             display: inline-block;
-            margin-bottom: 20px;
-            min-width: 180px;
+            margin-bottom: 24px;
+            min-width: 200px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
         }
         .max-label {
-            font-size: 11px;
-            color: #666;
+            font-size: 10px;
+            color: #444;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 2px;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
         }
         .max-num {
-            font-size: 32px;
-            font-weight: 700;
+            font-size: 36px;
+            font-weight: 800;
             color: #ffaa00;
+            text-shadow: 0 0 20px rgba(255,170,0,0.2);
+            transition: all 0.3s;
         }
         .max-sub {
-            font-size: 12px;
-            color: #555;
-            margin-top: 4px;
+            font-size: 11px;
+            color: #444;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
         }
         
         /* Butonlar */
         .btn {
             display: block;
-            width: 200px;
+            width: 220px;
             margin: 0 auto 10px;
-            padding: 14px 0;
-            font-size: 16px;
+            padding: 15px 0;
+            font-size: 15px;
             font-weight: 600;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
         }
-        .btn:active { transform: scale(0.96); }
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+        .btn:active { transform: scale(0.97); }
         .btn-green {
-            background: #00ff88;
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
             color: #000;
+            box-shadow: 0 4px 20px rgba(0,255,136,0.2);
         }
         .btn-blue {
-            background: #1a1a1a;
+            background: rgba(68,136,255,0.1);
             color: #4488ff;
-            border: 1px solid #222;
+            border: 1px solid rgba(68,136,255,0.2);
+        }
+        .btn-blue:hover {
+            background: rgba(68,136,255,0.15);
+            box-shadow: 0 0 20px rgba(68,136,255,0.1);
         }
         .btn-red {
-            background: #1a1a1a;
+            background: rgba(255,68,68,0.1);
             color: #ff4444;
-            border: 1px solid #222;
+            border: 1px solid rgba(255,68,68,0.2);
+        }
+        .btn-red:hover {
+            background: rgba(255,68,68,0.15);
+            box-shadow: 0 0 20px rgba(255,68,68,0.1);
         }
         .btn-gray {
-            background: #1a1a1a;
-            color: #888;
-            border: 1px solid #222;
-            font-size: 14px;
+            background: rgba(255,255,255,0.03);
+            color: #555;
+            border: 1px solid rgba(255,255,255,0.06);
+            font-size: 13px;
+        }
+        .btn-gray:hover {
+            background: rgba(255,255,255,0.06);
+            color: #777;
         }
         
         /* Mod badge */
         .mod-badge {
             position: fixed;
-            top: 16px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #111;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #888;
-            border: 1px solid #1a1a1a;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.08);
             z-index: 10;
+            transition: all 0.3s;
         }
-        .mod-badge.teker { color: #00ff88; }
-        .mod-badge.viraj { color: #ffaa00; }
+        .mod-badge.teker { 
+            color: #00ff88; 
+            box-shadow: 0 0 20px rgba(0,255,136,0.1);
+        }
+        .mod-badge.viraj { 
+            color: #ffaa00; 
+            box-shadow: 0 0 20px rgba(255,170,0,0.1);
+        }
         
         /* Footer */
         .footer {
             position: fixed;
-            bottom: 12px;
+            bottom: 14px;
             font-size: 10px;
-            color: #333;
-            letter-spacing: 0.5px;
+            color: #222;
+            letter-spacing: 1px;
+            z-index: 1;
         }
         
-        /* Durum mesajı */
+        /* Durum */
         .status {
-            margin-top: 20px;
+            margin-top: 24px;
             font-size: 13px;
-            color: #555;
+            color: #444;
             min-height: 20px;
+        }
+        
+        /* Pulse animasyonu */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Fade in */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
+<!-- Kar taneleri -->
+<div class="snow-container" id="snowContainer"></div>
+
+<!-- Glow efekti -->
+<div class="glow teker" id="glow"></div>
+
 <!-- BAŞLANGIÇ -->
-<div id="startScreen">
+<div id="startScreen" class="fade-in">
     <div class="logo">🏍️</div>
     <div class="title">Tek Teker & Viraj</div>
-    <div class="subtitle">Açı ölçer</div>
+    <div class="subtitle">Açı Ölçer</div>
     <button class="btn btn-green" id="startBtn" onclick="requestPermission()">Başlat</button>
     <div class="status" id="status"></div>
 </div>
 
 <!-- MOD SEÇİM -->
 <div id="modeSelectScreen">
-    <div class="logo" style="font-size: 40px; margin-bottom: 10px;">🏍️</div>
-    <div class="title" style="font-size: 20px; margin-bottom: 30px;">Mod Seç</div>
+    <div class="logo" style="font-size: 44px; margin-bottom: 8px; animation: none;">🏍️</div>
+    <div class="title" style="font-size: 22px; margin-bottom: 8px;">Mod Seç</div>
+    <div class="subtitle" style="margin-bottom: 30px;">Ölçüm modunu seçin</div>
     
     <div class="mode-card" onclick="selectMode('teker')">
         <div class="mode-icon">⬆️</div>
@@ -248,14 +445,16 @@
 
 <!-- ANA EKRAN -->
 <div id="mainScreen">
-    <div class="mod-badge" id="modBadge">TEK TEKER</div>
+    <div class="mod-badge teker" id="modBadge">Tek Teker</div>
     
     <div class="gauge-wrap">
         <div class="gauge-bg"></div>
+        <div class="gauge-track"></div>
         <div class="gauge-fill" id="gaugeFill"></div>
+        <div class="gauge-inner"></div>
         <div class="gauge-center">
             <div class="angle-num" id="angleDisplay">0</div>
-            <div class="angle-unit" id="angleUnit">DERECE</div>
+            <div class="angle-unit" id="angleUnit">Derece</div>
             <div class="direction" id="direction"></div>
         </div>
     </div>
@@ -274,12 +473,37 @@
 <div class="footer">valsesn</div>
 
 <script>
-let currentMode = 'teker'; // 'teker' veya 'viraj'
+let currentMode = 'teker';
 let maxAngle = 0;
 let maxLeft = 0;
 let maxRight = 0;
 let calibrationOffset = 0;
 let isRunning = false;
+
+// Kar taneleri oluştur
+function createSnowflakes() {
+    const container = document.getElementById('snowContainer');
+    const count = 25;
+    
+    for (let i = 0; i < count; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+        
+        const size = Math.random() * 2 + 1;
+        const left = Math.random() * 100;
+        const duration = Math.random() * 8 + 6;
+        const delay = Math.random() * 10;
+        
+        flake.style.width = size + 'px';
+        flake.style.height = size + 'px';
+        flake.style.left = left + '%';
+        flake.style.animationDuration = duration + 's';
+        flake.style.animationDelay = delay + 's';
+        
+        container.appendChild(flake);
+    }
+}
+createSnowflakes();
 
 function setStatus(msg) {
     document.getElementById('status').textContent = msg;
@@ -312,34 +536,44 @@ function goToModeSelect() {
     document.getElementById('startScreen').style.display = 'none';
     document.getElementById('mainScreen').style.display = 'none';
     document.getElementById('modeSelectScreen').style.display = 'block';
+    document.getElementById('modeSelectScreen').classList.add('fade-in');
 }
 
 function selectMode(mode) {
     currentMode = mode;
     document.getElementById('modeSelectScreen').style.display = 'none';
     document.getElementById('mainScreen').style.display = 'block';
+    document.getElementById('mainScreen').classList.add('fade-in');
     
     const badge = document.getElementById('modBadge');
+    const glow = document.getElementById('glow');
     const maxLabel = document.getElementById('maxLabel');
     const angleUnit = document.getElementById('angleUnit');
     const maxSub = document.getElementById('maxSub');
     const direction = document.getElementById('direction');
+    const fill = document.getElementById('gaugeFill');
     
     if (mode === 'teker') {
-        badge.textContent = 'TEK TEKER';
+        badge.textContent = 'Tek Teker';
         badge.className = 'mod-badge teker';
+        glow.className = 'glow teker';
         maxLabel.textContent = 'Maks Açı';
-        angleUnit.textContent = 'DERECE';
+        angleUnit.textContent = 'Derece';
         maxSub.textContent = '';
         direction.textContent = '';
         direction.className = 'direction';
+        fill.style.borderTopColor = '#00ff88';
+        fill.style.filter = 'drop-shadow(0 0 8px rgba(0,255,136,0.3))';
     } else {
-        badge.textContent = 'VIRAJ';
+        badge.textContent = 'Viraj';
         badge.className = 'mod-badge viraj';
+        glow.className = 'glow viraj';
         maxLabel.textContent = 'Maks Viraj';
-        angleUnit.textContent = 'DERECE';
+        angleUnit.textContent = 'Derece';
         direction.textContent = 'Düz';
         direction.className = 'direction dir-straight';
+        fill.style.borderTopColor = '#ffaa00';
+        fill.style.filter = 'drop-shadow(0 0 8px rgba(255,170,0,0.3))';
     }
     
     reset();
@@ -379,47 +613,39 @@ function handleTeker(e) {
 }
 
 function handleViraj(e) {
-    // gamma: sağa/sola eğim (-90 ile 90 arası)
     let raw = e.gamma || 0;
     let angle = raw - calibrationOffset;
     
-    // Sınırlandır
     if (angle < -60) angle = -60;
     if (angle > 60) angle = 60;
     
     let absAngle = Math.round(Math.abs(angle));
     
-    // Yön göster
     const dirEl = document.getElementById('direction');
+    const fill = document.getElementById('gaugeFill');
+    
     if (angle < -3) {
         dirEl.textContent = '← SOL';
         dirEl.className = 'direction dir-left';
+        fill.style.borderTopColor = '#4488ff';
+        fill.style.filter = 'drop-shadow(0 0 8px rgba(68,136,255,0.3))';
     } else if (angle > 3) {
         dirEl.textContent = 'SAĞ →';
         dirEl.className = 'direction dir-right';
+        fill.style.borderTopColor = '#ff4444';
+        fill.style.filter = 'drop-shadow(0 0 8px rgba(255,68,68,0.3))';
     } else {
         dirEl.textContent = 'Düz';
         dirEl.className = 'direction dir-straight';
+        fill.style.borderTopColor = '#ffaa00';
+        fill.style.filter = 'drop-shadow(0 0 8px rgba(255,170,0,0.3))';
     }
     
-    // Gauge: -60 sol, 0 orta, 60 sağ
-    // -60 → -90deg, 0 → 0deg, 60 → 90deg
     const rot = (angle / 60) * 90;
     document.getElementById('gaugeFill').style.transform = `rotate(${rot}deg)`;
     
-    // Renk: sol mavi, sağ kırmızı
-    const fill = document.getElementById('gaugeFill');
-    if (angle < -3) {
-        fill.style.borderTopColor = '#4488ff';
-    } else if (angle > 3) {
-        fill.style.borderTopColor = '#ff4444';
-    } else {
-        fill.style.borderTopColor = '#00ff88';
-    }
-    
     document.getElementById('angleDisplay').textContent = absAngle;
     
-    // Max kaydet
     if (angle < 0 && absAngle > maxLeft) {
         maxLeft = absAngle;
         updateVirajMax();
@@ -432,7 +658,7 @@ function handleViraj(e) {
 
 function updateVirajMax() {
     const maxSub = document.getElementById('maxSub');
-    maxSub.innerHTML = `Sol: ${maxLeft}° &nbsp; Sağ: ${maxRight}°`;
+    maxSub.innerHTML = `Sol ${maxLeft}° &nbsp;|&nbsp; Sağ ${maxRight}°`;
     
     const overallMax = Math.max(maxLeft, maxRight);
     document.getElementById('maxAngle').textContent = overallMax + '°';
@@ -458,9 +684,13 @@ function reset() {
     document.getElementById('maxAngle').textContent = '0°';
     document.getElementById('angleDisplay').textContent = '0';
     document.getElementById('gaugeFill').style.transform = 'rotate(-90deg)';
-    document.getElementById('gaugeFill').style.borderTopColor = '#00ff88';
     
-    if (currentMode === 'viraj') {
+    if (currentMode === 'teker') {
+        document.getElementById('gaugeFill').style.borderTopColor = '#00ff88';
+        document.getElementById('gaugeFill').style.filter = 'drop-shadow(0 0 8px rgba(0,255,136,0.3))';
+    } else {
+        document.getElementById('gaugeFill').style.borderTopColor = '#ffaa00';
+        document.getElementById('gaugeFill').style.filter = 'drop-shadow(0 0 8px rgba(255,170,0,0.3))';
         document.getElementById('maxSub').textContent = '';
         document.getElementById('direction').textContent = 'Düz';
         document.getElementById('direction').className = 'direction dir-straight';
@@ -470,6 +700,7 @@ function reset() {
 function goToModeSelect() {
     document.getElementById('mainScreen').style.display = 'none';
     document.getElementById('modeSelectScreen').style.display = 'block';
+    document.getElementById('modeSelectScreen').classList.add('fade-in');
 }
 </script>
 
