@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Tek Teker</title>
+    <title>Tek Teker & Viraj</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
@@ -23,12 +23,12 @@
             user-select: none;
         }
         
-        #startScreen, #mainScreen { 
+        #startScreen, #mainScreen, #modeSelectScreen { 
             text-align: center; 
             width: 100%; 
             padding: 20px;
         }
-        #mainScreen { display: none; }
+        #mainScreen, #modeSelectScreen { display: none; }
         
         /* Başlangıç ekranı */
         .logo {
@@ -46,6 +46,23 @@
             color: #666;
             margin-bottom: 40px;
         }
+        
+        /* Mod seçim */
+        .mode-card {
+            background: #111;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 10px auto;
+            width: 260px;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.2s;
+            border: 1px solid #1a1a1a;
+        }
+        .mode-card:active { transform: scale(0.96); }
+        .mode-card:hover { background: #161616; }
+        .mode-icon { font-size: 36px; margin-bottom: 8px; }
+        .mode-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+        .mode-desc { font-size: 12px; color: #666; }
         
         /* Ana gösterge */
         .gauge-wrap {
@@ -91,13 +108,25 @@
             margin-top: 2px;
         }
         
+        /* Yön göstergesi (viraj modu) */
+        .direction {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 4px;
+            height: 20px;
+        }
+        .dir-left { color: #4488ff; }
+        .dir-right { color: #ff4444; }
+        .dir-straight { color: #666; }
+        
         /* Maks açı */
         .max-wrap {
             background: #111;
             border-radius: 16px;
             padding: 14px 28px;
             display: inline-block;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            min-width: 180px;
         }
         .max-label {
             font-size: 11px;
@@ -110,6 +139,11 @@
             font-size: 32px;
             font-weight: 700;
             color: #ffaa00;
+        }
+        .max-sub {
+            font-size: 12px;
+            color: #555;
+            margin-top: 4px;
         }
         
         /* Butonlar */
@@ -140,6 +174,30 @@
             color: #ff4444;
             border: 1px solid #222;
         }
+        .btn-gray {
+            background: #1a1a1a;
+            color: #888;
+            border: 1px solid #222;
+            font-size: 14px;
+        }
+        
+        /* Mod badge */
+        .mod-badge {
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #888;
+            border: 1px solid #1a1a1a;
+            z-index: 10;
+        }
+        .mod-badge.teker { color: #00ff88; }
+        .mod-badge.viraj { color: #ffaa00; }
         
         /* Footer */
         .footer {
@@ -164,36 +222,62 @@
 <!-- BAŞLANGIÇ -->
 <div id="startScreen">
     <div class="logo">🏍️</div>
-    <div class="title">Tek Teker</div>
+    <div class="title">Tek Teker & Viraj</div>
     <div class="subtitle">Açı ölçer</div>
     <button class="btn btn-green" id="startBtn" onclick="requestPermission()">Başlat</button>
     <div class="status" id="status"></div>
 </div>
 
+<!-- MOD SEÇİM -->
+<div id="modeSelectScreen">
+    <div class="logo" style="font-size: 40px; margin-bottom: 10px;">🏍️</div>
+    <div class="title" style="font-size: 20px; margin-bottom: 30px;">Mod Seç</div>
+    
+    <div class="mode-card" onclick="selectMode('teker')">
+        <div class="mode-icon">⬆️</div>
+        <div class="mode-name">Tek Teker</div>
+        <div class="mode-desc">Öne kalkış açısı</div>
+    </div>
+    
+    <div class="mode-card" onclick="selectMode('viraj')">
+        <div class="mode-icon">↔️</div>
+        <div class="mode-name">Viraj</div>
+        <div class="mode-desc">Sağ / sol yatış açısı</div>
+    </div>
+</div>
+
 <!-- ANA EKRAN -->
 <div id="mainScreen">
+    <div class="mod-badge" id="modBadge">TEK TEKER</div>
+    
     <div class="gauge-wrap">
         <div class="gauge-bg"></div>
         <div class="gauge-fill" id="gaugeFill"></div>
         <div class="gauge-center">
             <div class="angle-num" id="angleDisplay">0</div>
-            <div class="angle-unit">DERECE</div>
+            <div class="angle-unit" id="angleUnit">DERECE</div>
+            <div class="direction" id="direction"></div>
         </div>
     </div>
     
     <div class="max-wrap">
-        <div class="max-label">Maks Açı</div>
+        <div class="max-label" id="maxLabel">Maks Açı</div>
         <div class="max-num" id="maxAngle">0°</div>
+        <div class="max-sub" id="maxSub"></div>
     </div>
     
     <button class="btn btn-blue" onclick="calibrate()">Dengele</button>
     <button class="btn btn-red" onclick="reset()">Sıfırla</button>
+    <button class="btn btn-gray" onclick="goToModeSelect()">Mod Değiştir</button>
 </div>
 
 <div class="footer">valsesn</div>
 
 <script>
+let currentMode = 'teker'; // 'teker' veya 'viraj'
 let maxAngle = 0;
+let maxLeft = 0;
+let maxRight = 0;
 let calibrationOffset = 0;
 let isRunning = false;
 
@@ -210,13 +294,13 @@ async function requestPermission() {
             setStatus('İzin isteniyor...');
             const res = await DeviceOrientationEvent.requestPermission();
             if (res === 'granted') {
-                startApp();
+                goToModeSelect();
             } else {
                 setStatus('İzin reddedildi');
                 btn.disabled = false;
             }
         } else {
-            startApp();
+            goToModeSelect();
         }
     } catch (e) {
         setStatus('Hata: ' + e.message);
@@ -224,51 +308,168 @@ async function requestPermission() {
     }
 }
 
-function startApp() {
+function goToModeSelect() {
     document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'none';
+    document.getElementById('modeSelectScreen').style.display = 'block';
+}
+
+function selectMode(mode) {
+    currentMode = mode;
+    document.getElementById('modeSelectScreen').style.display = 'none';
     document.getElementById('mainScreen').style.display = 'block';
-    window.addEventListener('deviceorientation', handleOrientation);
-    isRunning = true;
+    
+    const badge = document.getElementById('modBadge');
+    const maxLabel = document.getElementById('maxLabel');
+    const angleUnit = document.getElementById('angleUnit');
+    const maxSub = document.getElementById('maxSub');
+    const direction = document.getElementById('direction');
+    
+    if (mode === 'teker') {
+        badge.textContent = 'TEK TEKER';
+        badge.className = 'mod-badge teker';
+        maxLabel.textContent = 'Maks Açı';
+        angleUnit.textContent = 'DERECE';
+        maxSub.textContent = '';
+        direction.textContent = '';
+        direction.className = 'direction';
+    } else {
+        badge.textContent = 'VIRAJ';
+        badge.className = 'mod-badge viraj';
+        maxLabel.textContent = 'Maks Viraj';
+        angleUnit.textContent = 'DERECE';
+        direction.textContent = 'Düz';
+        direction.className = 'direction dir-straight';
+    }
+    
+    reset();
+    
+    if (!isRunning) {
+        window.addEventListener('deviceorientation', handleOrientation);
+        isRunning = true;
+    }
 }
 
 function handleOrientation(e) {
+    if (currentMode === 'teker') {
+        handleTeker(e);
+    } else {
+        handleViraj(e);
+    }
+}
+
+function handleTeker(e) {
     let raw = e.beta || 0;
     let angle = raw - calibrationOffset;
     
-    // Aşağı eğilince 0'da kal, negatif olmaz
     if (angle < 0) angle = 0;
     if (angle > 90) angle = 90;
     
-    // Tam sayı
     angle = Math.round(angle);
     
     document.getElementById('angleDisplay').textContent = angle;
     
-    // Gauge
     const rot = -90 + (angle / 90 * 270);
     document.getElementById('gaugeFill').style.transform = `rotate(${rot}deg)`;
     
-    // Max
     if (angle > maxAngle) {
         maxAngle = angle;
         document.getElementById('maxAngle').textContent = maxAngle + '°';
     }
 }
 
+function handleViraj(e) {
+    // gamma: sağa/sola eğim (-90 ile 90 arası)
+    let raw = e.gamma || 0;
+    let angle = raw - calibrationOffset;
+    
+    // Sınırlandır
+    if (angle < -60) angle = -60;
+    if (angle > 60) angle = 60;
+    
+    let absAngle = Math.round(Math.abs(angle));
+    
+    // Yön göster
+    const dirEl = document.getElementById('direction');
+    if (angle < -3) {
+        dirEl.textContent = '← SOL';
+        dirEl.className = 'direction dir-left';
+    } else if (angle > 3) {
+        dirEl.textContent = 'SAĞ →';
+        dirEl.className = 'direction dir-right';
+    } else {
+        dirEl.textContent = 'Düz';
+        dirEl.className = 'direction dir-straight';
+    }
+    
+    // Gauge: -60 sol, 0 orta, 60 sağ
+    // -60 → -90deg, 0 → 0deg, 60 → 90deg
+    const rot = (angle / 60) * 90;
+    document.getElementById('gaugeFill').style.transform = `rotate(${rot}deg)`;
+    
+    // Renk: sol mavi, sağ kırmızı
+    const fill = document.getElementById('gaugeFill');
+    if (angle < -3) {
+        fill.style.borderTopColor = '#4488ff';
+    } else if (angle > 3) {
+        fill.style.borderTopColor = '#ff4444';
+    } else {
+        fill.style.borderTopColor = '#00ff88';
+    }
+    
+    document.getElementById('angleDisplay').textContent = absAngle;
+    
+    // Max kaydet
+    if (angle < 0 && absAngle > maxLeft) {
+        maxLeft = absAngle;
+        updateVirajMax();
+    }
+    if (angle > 0 && absAngle > maxRight) {
+        maxRight = absAngle;
+        updateVirajMax();
+    }
+}
+
+function updateVirajMax() {
+    const maxSub = document.getElementById('maxSub');
+    maxSub.innerHTML = `Sol: ${maxLeft}° &nbsp; Sağ: ${maxRight}°`;
+    
+    const overallMax = Math.max(maxLeft, maxRight);
+    document.getElementById('maxAngle').textContent = overallMax + '°';
+}
+
 function calibrate() {
-    // Şu anki açıyı 0 olarak ayarla
     window.addEventListener('deviceorientation', function set(e) {
-        calibrationOffset = e.beta || 0;
+        if (currentMode === 'teker') {
+            calibrationOffset = e.beta || 0;
+        } else {
+            calibrationOffset = e.gamma || 0;
+        }
         window.removeEventListener('deviceorientation', set);
     }, { once: true });
 }
 
 function reset() {
     maxAngle = 0;
+    maxLeft = 0;
+    maxRight = 0;
     calibrationOffset = 0;
+    
     document.getElementById('maxAngle').textContent = '0°';
     document.getElementById('angleDisplay').textContent = '0';
     document.getElementById('gaugeFill').style.transform = 'rotate(-90deg)';
+    document.getElementById('gaugeFill').style.borderTopColor = '#00ff88';
+    
+    if (currentMode === 'viraj') {
+        document.getElementById('maxSub').textContent = '';
+        document.getElementById('direction').textContent = 'Düz';
+        document.getElementById('direction').className = 'direction dir-straight';
+    }
+}
+
+function goToModeSelect() {
+    document.getElementById('mainScreen').style.display = 'none';
+    document.getElementById('modeSelectScreen').style.display = 'block';
 }
 </script>
 
