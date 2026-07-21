@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>🏍️ Tek Teker Ölçer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        #startScreen, #mainScreen { text-align: center; width: 100%; }
+        #mainScreen { display: none; }
+        
+        .big-number {
+            font-size: 120px;
+            font-weight: 900;
+            line-height: 1;
+        }
+        .label {
+            font-size: 18px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .gauge {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 8px solid #222;
+            position: relative;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gauge-fill {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top-color: #00ff88;
+            transform: rotate(-90deg);
+            transition: transform 0.1s;
+        }
+        .btn {
+            padding: 18px 50px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            background: #00ff88;
+            color: #000;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .btn:disabled { background: #333; color: #666; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+            max-width: 400px;
+        }
+        .stat-box {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 15px;
+        }
+        .stat-value { font-size: 36px; font-weight: bold; color: #00ff88; }
+        .stat-label { font-size: 12px; color: #888; }
+        
+        .warning {
+            color: #ff4444;
+            font-size: 14px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- BAŞLANGIÇ EKRANI -->
+<div id="startScreen">
+    <h1 style="font-size: 40px; margin-bottom: 10px;">🏍️</h1>
+    <h2 style="margin-bottom: 30px;">Tek Teker Ölçer</h2>
+    <p style="color: #888; margin-bottom: 30px; padding: 0 30px;">
+        Telefonu gidona paralel tut.<br>
+        Ekran size bakacak şekilde yerleştirin.
+    </p>
+    <button class="btn" id="startBtn" onclick="requestPermission()">
+        BAŞLAT
+    </button>
+    <p id="status" style="margin-top: 20px; color: #666;"></p>
+</div>
+
+<!-- ANA EKRAN -->
+<div id="mainScreen">
+    <div class="gauge">
+        <div class="gauge-fill" id="gaugeFill"></div>
+        <div>
+            <div class="big-number" id="angleDisplay">0</div>
+            <div class="label">DERECE</div>
+        </div>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-box">
+            <div class="stat-value" id="maxAngle">0°</div>
+            <div class="stat-label">MAKS AÇI</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value" id="gForce">0.0</div>
+            <div class="stat-label">G-FORCE</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value" id="timer">00:00</div>
+            <div class="stat-label">SÜRE</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value" id="balance">0%</div>
+            <div class="stat-label">DENGELİLİK</div>
+        </div>
+    </div>
+    
+    <button class="btn" onclick="reset()" style="background: #ff4444; color: white;">
+        SIFIRLA
+    </button>
+</div>
+
+<script>
+let maxAngle = 0;
+let startTime = null;
+let timerInterval = null;
+let isRunning = false;
+
+function updateStatus(msg) {
+    document.getElementById('status').textContent = msg;
+}
+
+async function requestPermission() {
+    const btn = document.getElementById('startBtn');
+    btn.disabled = true;
+    
+    try {
+        // iOS 13+ izin iste
+        if (typeof DeviceOrientationEvent !== 'undefined' && 
+            typeof DeviceOrientationEvent.requestPermission === 'function') {
+            
+            updateStatus('İzin isteniyor...');
+            const response = await DeviceOrientationEvent.requestPermission();
+            
+            if (response === 'granted') {
+                startApp();
+            } else {
+                updateStatus('❌ İzin reddedildi! Ayarlardan izin vermelisiniz.');
+                btn.disabled = false;
+            }
+        } else {
+            // Android veya eski iOS - doğrudan başla
+            startApp();
+        }
+    } catch (e) {
+        updateStatus('❌ Hata: ' + e.message);
+        btn.disabled = false;
+    }
+}
+
+function startApp() {
+    updateStatus('✅ Sensörler aktif!');
+    
+    // Ekran değiştir
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'block';
+    
+    // Sensör dinleyicileri
+    window.addEventListener('deviceorientation', handleOrientation);
+    window.addEventListener('devicemotion', handleMotion);
+    
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 100);
+    isRunning = true;
+}
+
+function handleOrientation(event) {
+    // beta: öne/arkaya eğim (-180 ile 180 arası)
+    let angle = event.beta || 0;
+    
+    // Negatif değerleri pozitif yap, 0-90 aralığına sınırla
+    angle = Math.abs(angle);
+    if (angle > 90) angle = 90;
+    
+    // Ekran güncelle
+    document.getElementById('angleDisplay').textContent = angle.toFixed(1);
+    
+    // Gauge doldur (0-90 derece → 0-270 derece dönüş)
+    const rotation = -90 + (angle / 90 * 270);
+    document.getElementById('gaugeFill').style.transform = `rotate(${rotation}deg)`;
+    
+    // Max açı
+    if (angle > maxAngle) {
+        maxAngle = angle;
+        document.getElementById('maxAngle').textContent = maxAngle.toFixed(1) + '°';
+    }
+    
+    // Dengelilik skoru (45° civarı ideal)
+    const balance = Math.max(0, 100 - Math.abs(angle - 45) * 2);
+    document.getElementById('balance').textContent = balance.toFixed(0) + '%';
+}
+
+function handleMotion(event) {
+    const acc = event.accelerationIncludingGravity;
+    if (!acc) return;
+    
+    // Toplam G kuvveti
+    const totalG = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2) / 9.8;
+    document.getElementById('gForce').textContent = totalG.toFixed(2);
+}
+
+function updateTimer() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+    const secs = (elapsed % 60).toString().padStart(2, '0');
+    document.getElementById('timer').textContent = `${mins}:${secs}`;
+}
+
+function reset() {
+    maxAngle = 0;
+    startTime = Date.now();
+    document.getElementById('maxAngle').textContent = '0°';
+    document.getElementById('balance').textContent = '0%';
+}
+
+// PWA desteği
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('data:text/javascript,').catch(() => {});
+}
+</script>
+
+</body>
+</html>
