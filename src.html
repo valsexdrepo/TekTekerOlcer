@@ -115,7 +115,7 @@
         .mode-name { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
         .mode-desc { font-size: 11px; color: #555; }
         
-        /* === YARI DAIRE GAUGE === */
+        /* === TEK TEKER GAUGE === */
         .gauge-wrap {
             position: relative;
             width: 170px;
@@ -124,7 +124,6 @@
             flex-shrink: 0;
             overflow: hidden;
         }
-        /* Arkaplan yarım daire */
         .gauge-bg {
             position: absolute;
             width: 170px;
@@ -134,7 +133,6 @@
             left: 0;
             border: 3px solid rgba(255,255,255,0.06);
         }
-        /* Renkli yay - conic-gradient */
         .gauge-fill {
             position: absolute;
             width: 170px;
@@ -163,7 +161,6 @@
             initial-value: #00ff88;
             inherits: false;
         }
-        /* İç boşluk */
         .gauge-inner {
             position: absolute;
             width: 130px;
@@ -175,7 +172,6 @@
             background: rgba(255,255,255,0.015);
             border: 1px solid rgba(255,255,255,0.03);
         }
-        /* Merkez metin */
         .gauge-center {
             position: absolute;
             bottom: 8px;
@@ -184,6 +180,39 @@
             text-align: center;
             width: 100%;
         }
+        
+        /* === VIRAJ - GAUGE YOK, SADECE BÜYÜK SAYI === */
+        .viraj-display {
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        .viraj-num {
+            font-size: 80px;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -3px;
+            transition: color 0.3s;
+        }
+        .viraj-label {
+            font-size: 10px;
+            color: #555;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        .viraj-direction {
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 8px;
+            height: 36px;
+            letter-spacing: 2px;
+        }
+        .viraj-dir-left { color: #4488ff; }
+        .viraj-dir-right { color: #ff4444; }
+        .viraj-dir-straight { color: #444; }
+        
+        /* Ortak metin stilleri */
         .angle-num {
             font-size: 44px;
             font-weight: 800;
@@ -198,17 +227,6 @@
             text-transform: uppercase;
             margin-top: 1px;
         }
-        
-        .direction {
-            font-size: 11px;
-            font-weight: 700;
-            margin-top: 3px;
-            height: 14px;
-            letter-spacing: 1px;
-        }
-        .dir-left { color: #4488ff; }
-        .dir-right { color: #ff4444; }
-        .dir-straight { color: #555; }
         
         .speed-wrap {
             background: rgba(255,255,255,0.03);
@@ -366,32 +384,60 @@
     </div>
 </div>
 
-<div class="screen" id="mainScreen">
-    <div class="mod-badge teker" id="modBadge">Tek Teker</div>
+<!-- TEK TEKER EKRANI -->
+<div class="screen" id="tekerScreen">
+    <div class="mod-badge teker">Tek Teker</div>
     
     <div class="speed-wrap">
         <div class="speed-label">Hız</div>
         <div>
-            <span class="speed-num" id="speedDisplay">0</span>
+            <span class="speed-num" id="tekerSpeed">0</span>
             <span class="speed-unit">km/h</span>
         </div>
     </div>
     
     <div class="gauge-wrap">
         <div class="gauge-bg"></div>
-        <div class="gauge-fill" id="gaugeFill"></div>
+        <div class="gauge-fill" id="tekerGauge"></div>
         <div class="gauge-inner"></div>
         <div class="gauge-center">
-            <div class="angle-num" id="angleDisplay">0</div>
-            <div class="angle-unit" id="angleUnit">Derece</div>
-            <div class="direction" id="direction"></div>
+            <div class="angle-num" id="tekerAngle">0</div>
+            <div class="angle-unit">Derece</div>
         </div>
     </div>
     
     <div class="max-wrap">
-        <div class="max-label" id="maxLabel">Maks Açı</div>
-        <div class="max-num" id="maxAngle">0°</div>
-        <div class="max-sub" id="maxSub"></div>
+        <div class="max-label">Maks Açı</div>
+        <div class="max-num" id="tekerMax">0°</div>
+    </div>
+    
+    <button class="btn btn-blue" onclick="calibrate()">Dengele</button>
+    <button class="btn btn-red" onclick="reset()">Sıfırla</button>
+    <button class="btn btn-gray" onclick="goToModeSelect()">Mod Değiştir</button>
+</div>
+
+<!-- VIRAJ EKRANI -->
+<div class="screen" id="virajScreen">
+    <div class="mod-badge viraj">Viraj</div>
+    
+    <div class="speed-wrap">
+        <div class="speed-label">Hız</div>
+        <div>
+            <span class="speed-num" id="virajSpeed">0</span>
+            <span class="speed-unit">km/h</span>
+        </div>
+    </div>
+    
+    <div class="viraj-display">
+        <div class="viraj-num" id="virajAngle">0</div>
+        <div class="viraj-label">Derece</div>
+        <div class="viraj-direction viraj-dir-straight" id="virajDir">Düz</div>
+    </div>
+    
+    <div class="max-wrap">
+        <div class="max-label">Maks Viraj</div>
+        <div class="max-num" id="virajMax">0°</div>
+        <div class="max-sub" id="virajMaxSub"></div>
     </div>
     
     <button class="btn btn-blue" onclick="calibrate()">Dengele</button>
@@ -470,62 +516,38 @@ async function requestPermission() {
 }
 
 function startGPS() {
-    if (!navigator.geolocation) {
-        document.getElementById('speedDisplay').textContent = '--';
-        return;
-    }
+    if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
         (pos) => {
             updateSpeed(pos);
             navigator.geolocation.watchPosition(
                 updateSpeed,
-                () => { document.getElementById('speedDisplay').textContent = '0'; },
+                () => {},
                 { enableHighAccuracy: true, maximumAge: 500, timeout: 3000 }
             );
         },
-        () => { document.getElementById('speedDisplay').textContent = '--'; },
+        () => {},
         { enableHighAccuracy: true, timeout: 5000 }
     );
 }
 
 function updateSpeed(pos) {
     let speedMs = pos.coords.speed;
-    if (speedMs === null || speedMs === undefined || isNaN(speedMs)) {
-        document.getElementById('speedDisplay').textContent = '0';
-    } else {
-        document.getElementById('speedDisplay').textContent = Math.round(speedMs * 3.6);
-    }
+    let kmh = (speedMs === null || isNaN(speedMs)) ? 0 : Math.round(speedMs * 3.6);
+    document.getElementById('tekerSpeed').textContent = kmh;
+    document.getElementById('virajSpeed').textContent = kmh;
 }
 
 function selectMode(mode) {
     currentMode = mode;
-    showScreen('mainScreen');
-    
-    const badge = document.getElementById('modBadge');
     const glow = document.getElementById('glow');
-    const maxLabel = document.getElementById('maxLabel');
-    const angleUnit = document.getElementById('angleUnit');
-    const maxSub = document.getElementById('maxSub');
-    const direction = document.getElementById('direction');
-    const fill = document.getElementById('gaugeFill');
     
     if (mode === 'teker') {
-        badge.textContent = 'Tek Teker';
-        badge.className = 'mod-badge teker';
         glow.className = 'glow teker';
-        maxLabel.textContent = 'Maks Açı';
-        angleUnit.textContent = 'Derece';
-        maxSub.textContent = '';
-        direction.textContent = '';
-        direction.className = 'direction';
+        showScreen('tekerScreen');
     } else {
-        badge.textContent = 'Viraj';
-        badge.className = 'mod-badge viraj';
         glow.className = 'glow viraj';
-        maxLabel.textContent = 'Maks Viraj';
-        angleUnit.textContent = 'Derece';
-        direction.textContent = 'Düz';
-        direction.className = 'direction dir-straight';
+        showScreen('virajScreen');
     }
     
     reset();
@@ -549,14 +571,13 @@ function rgbToHex(r, g, b) {
 }
 
 function getColor(intensity) {
-    // intensity: 0-1, 0=yeşil, 1=kırmızı
     const r = Math.round(255 * intensity);
     const g = Math.round(255 * (1 - intensity));
     return rgbToHex(r, g, 0);
 }
 
-function setGauge(deg, color) {
-    const fill = document.getElementById('gaugeFill');
+function setTekerGauge(deg, color) {
+    const fill = document.getElementById('tekerGauge');
     fill.style.setProperty('--gauge-deg', deg + 'deg');
     fill.style.setProperty('--gauge-color', color);
 }
@@ -569,21 +590,16 @@ function handleTeker(e) {
     if (angle > 90) angle = 90;
     angle = Math.round(angle);
     
-    // Renk
     const color = getColor(angle / 90);
-    
-    // Gauge: conic-gradient from 180deg (alt)
-    // 0° tek teker = 0deg (sol baş)
-    // 90° tek teker = 180deg (sağ baş)
     const gaugeDeg = (angle / 90) * 180;
     
-    setGauge(gaugeDeg, color);
+    setTekerGauge(gaugeDeg, color);
     
-    document.getElementById('angleDisplay').textContent = angle;
+    document.getElementById('tekerAngle').textContent = angle;
     
     if (angle > maxAngle) {
         maxAngle = angle;
-        document.getElementById('maxAngle').textContent = maxAngle + '°';
+        document.getElementById('tekerMax').textContent = maxAngle + '°';
     }
 }
 
@@ -591,46 +607,32 @@ function handleViraj(e) {
     let raw = e.gamma || 0;
     let angle = raw - calibrationOffset;
     
-    // Sınırlar
     if (angle < -60) angle = -60;
     if (angle > 60) angle = 60;
     
     let absAngle = Math.round(Math.abs(angle));
     
-    const dirEl = document.getElementById('direction');
+    const dirEl = document.getElementById('virajDir');
+    const numEl = document.getElementById('virajAngle');
     
-    // Renk
+    // Renk: sayı rengi değişsin
     const color = getColor(absAngle / 60);
+    numEl.style.color = color;
     
-    // Yön metni
+    // Yön
     if (angle < -3) {
         dirEl.innerHTML = '← SOL';
-        dirEl.className = 'direction dir-left';
+        dirEl.className = 'viraj-direction viraj-dir-left';
     } else if (angle > 3) {
         dirEl.innerHTML = 'SAĞ →';
-        dirEl.className = 'direction dir-right';
+        dirEl.className = 'viraj-direction viraj-dir-right';
     } else {
         dirEl.textContent = 'Düz';
-        dirEl.className = 'direction dir-straight';
+        dirEl.className = 'viraj-direction viraj-dir-straight';
+        numEl.style.color = '#fff';
     }
     
-    // === VIRAJ GAUGE ===
-    // conic-gradient from 180deg (alt merkezden başlar, saat yönünde)
-    // 
-    // Düz (0°) = 90deg (tam üstte, yarım dairenin ortası)
-    // Sol (-60°) = 0deg (sol baş)  
-    // Sağ (+60°) = 180deg (sağ baş)
-    //
-    // Formül: gaugeDeg = 90 + (angle / 60 * 90)
-    // -60° → 90 + (-1 * 90) = 0° (sol baş) ✓
-    //   0° → 90 + (0 * 90) = 90° (tam üstte) ✓
-    // +60° → 90 + (1 * 90) = 180° (sağ baş) ✓
-    
-    const gaugeDeg = 90 + (angle / 60 * 90);
-    
-    setGauge(gaugeDeg, color);
-    
-    document.getElementById('angleDisplay').textContent = absAngle;
+    numEl.textContent = absAngle;
     
     if (angle < 0 && absAngle > maxLeft) {
         maxLeft = absAngle;
@@ -643,9 +645,8 @@ function handleViraj(e) {
 }
 
 function updateVirajMax() {
-    document.getElementById('maxSub').textContent = `Sol ${maxLeft}° | Sağ ${maxRight}°`;
-    const overallMax = Math.max(maxLeft, maxRight);
-    document.getElementById('maxAngle').textContent = overallMax + '°';
+    document.getElementById('virajMaxSub').textContent = `Sol ${maxLeft}° | Sağ ${maxRight}°`;
+    document.getElementById('virajMax').textContent = Math.max(maxLeft, maxRight) + '°';
 }
 
 function calibrate() {
@@ -661,16 +662,17 @@ function reset() {
     maxRight = 0;
     calibrationOffset = 0;
     
-    document.getElementById('maxAngle').textContent = '0°';
-    document.getElementById('angleDisplay').textContent = '0';
-    
     if (currentMode === 'teker') {
-        setGauge(0, '#00ff88');
+        document.getElementById('tekerMax').textContent = '0°';
+        document.getElementById('tekerAngle').textContent = '0';
+        setTekerGauge(0, '#00ff88');
     } else {
-        setGauge(90, '#ffaa00');
-        document.getElementById('maxSub').textContent = '';
-        document.getElementById('direction').textContent = 'Düz';
-        document.getElementById('direction').className = 'direction dir-straight';
+        document.getElementById('virajMax').textContent = '0°';
+        document.getElementById('virajAngle').textContent = '0';
+        document.getElementById('virajAngle').style.color = '#fff';
+        document.getElementById('virajMaxSub').textContent = '';
+        document.getElementById('virajDir').textContent = 'Düz';
+        document.getElementById('virajDir').className = 'viraj-direction viraj-dir-straight';
     }
 }
 
